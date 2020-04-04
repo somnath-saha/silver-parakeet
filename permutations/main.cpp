@@ -8,11 +8,20 @@ static int sno2=0;
  
 void nCRPermutations(string s, int start, int r)
 {
-    if(start>=r) {
+    if(start>r) {
         return;
     }
-    cout << (++sno2) << ". " << s << endl;
-    nCRPermutations(s, start, r);
+    if(start==r) {
+        cout << (++sno2) << ". " << s.substr(0, r) << endl;
+    }
+    else {
+        nCRPermutations(s, start+1, r);
+        for(int i = start+1; i<s.size(); ++i) {
+            swap(s[start], s[i]);
+            nCRPermutations(s, start+1, r);
+            swap(s[start], s[i]);
+        }
+    }
 }
 
 void printAllPermutations(string s, int start)
@@ -34,12 +43,13 @@ void printAllPermutations(string s, int start)
             printAllPermutations(s, start + 1);
             std::swap(s[start], s[i]);
         }
-    }
+    } 
 }
 
 int main()
 {
-    string s = "awqd";
-    printAllPermutations(s, 0);
+    string s = "abcd";
+    //printAllPermutations(s, 0);
+    nCRPermutations(s, 0, 2);
     return 0;
 }
