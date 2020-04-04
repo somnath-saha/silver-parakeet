@@ -3,5 +3,8 @@
         "vector": "cpp",
         "iosfwd": "cpp",
         "string": "cpp"
-    }
+    },
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.saveAllFilesBeforeRun": true,
+    "code-runner.ignoreSelection": true
 }
