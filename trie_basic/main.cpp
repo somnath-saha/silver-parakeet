@@ -5,66 +5,134 @@
 
 using namespace std;
 
-class Trie {
-    struct TNode {
+class Trie
+{
+    struct TNode
+    {
+        unordered_map<char, TNode *> m;
         bool isEnd;
-        unordered_map<char, TNode*> m;
-        TNode(bool end=false): isEnd(end) {}
+        TNode(bool end = false) : isEnd(end) {}
     };
     TNode *root;
+
 public:
-    Trie(): root(NULL) {}
-    Trie(string const& s): root(NULL) {
-        addWord(s);
-    }
-    void _addWord(string const& s, int index, TNode* root) {
-        if(index>=s.size()) {
+    Trie() : root(new TNode()) {}
+    void _removeWord(string s, int i, TNode *node) {
+        if(node==NULL || i>s.size() || i<0) {
             return;
         }
-        if(root==NULL) {
-            root = new TNode();
-            root->m[s[index]] = new TNode();
+        if(i==s.size()) {
+            node->isEnd = false;
+            if(node->m.size()==0) {
+                delete node;
+            }
+            return;
+        }
+        auto& m = node->m;
+        auto iter = m.find(s[i]);
+        if(iter==m.end()) {
+            return;
         }
         else {
-            auto& m = root->m;
-            auto iter = m.find(s[index]);
-            if(iter==m.end()) {
-                m[s[index]] = new TNode();
-            }
-            else {
-                _addWord(s, index+1, iter->second);
+            _removeWord(s, i+1, iter->second);
+            if(node->m.size()==0 && !node->isEnd) {
+                delete node;
             }
         }
-        if(index==s.size()-1) {
-            root->isEnd = true;
-        }
     }
-    void addWord(string const& s) {
-        if(s.empty()) {
-            return;
-        }
-        _addWord(s, 0, root);
+    void removeWord(string s) {
+        _removeWord(s, 0, root);
     }
-    bool _isPresent(const string& s, int index, TNode* root) {
-        if(root==NULL || s.size()==0 || root->m.size()==0) {
-            return false;
+    bool findWord(string s)
+    {
+        TNode *node = root;
+        for (char c : s)
+        {
+            if (node == NULL)
+            {
+                return false;
+            }
+            auto &m = node->m;
+            auto iter = m.find(c);
+            if (iter == m.end())
+            {
+                return false;
+            }
+            else
+            {
+                node = iter->second;
+            }
         }
-        auto iter = root->m.find(s[index]);
-        if(iter==root->m.end()) {
-            return false;
-        }
-        return _isPresent(s, index+1, iter->second);
+        return node->isEnd;
     }
-    bool isPresent(const string& s) {
-        return _isPresent(s, 0, root);
+    void addWord(string s)
+    {
+        TNode *node = root;
+        for (char c : s)
+        {
+            unordered_map<char, TNode *> &m = node->m;
+            auto iter = m.find(c);
+            if (iter == m.end())
+            {
+                node = new TNode();
+                m[c] = node;
+            }
+            else
+            {
+                node = iter->second;
+            }
+        }
+        node->isEnd = true;
     }
 };
 
 int main()
 {
     Trie t;
-    t.addWord("test");
-    cout<<(t.isPresent("test") ? "Present" : "Not Present")<<endl;
-    cout<<(t.isPresent("test2") ? "Present" : "Not Present")<<endl;
+    vector<string> addWords({
+                "tes", 
+                "test123", 
+                //"test", 
+                "abcde", 
+                "a", 
+                "3"});
+    vector<string> findWords({
+                "tes", 
+                "test123", 
+                "test", 
+                "abcde", 
+                "a", 
+                "3", 
+                "3a", 
+                "test2"});
+    vector<string> removeWords({
+                "test123", 
+                "test", 
+                "a", 
+                "3", 
+                "3a", 
+                "test2"});
+    for (string &s : addWords)
+    {
+        cout << s << " inserted. " << endl;
+        t.addWord(s);
+    }
+    for (string &s : removeWords)
+    {
+        cout << s << " removed if present. " << endl;
+        t.removeWord(s);
+    }
+    for (string &s : findWords)
+    {
+        if (t.findWord(s))
+        {
+            cout << s << " found.";
+        }
+        else
+        {
+            cout << s << " not found.";
+        }
+        cout << endl;
+    }
     return 0;
 }
