@@ -121,7 +121,7 @@ void getSubmatrix3(const vector<vector<int>> &v, int k)
             cout<<"rb:"<<rb<<" r:"<<r<<endl;
             for (int c = 0; c < ct; ++c)
             {
-                sumCol[c] += v[rb][c];
+                sumCol[c] += v[r][c];
                 sum[c] = sumCol[c];
                 cout << sum[c] << " ";
                 oper += 2;
@@ -139,11 +139,15 @@ void getSubmatrix3(const vector<vector<int>> &v, int k)
                 if (iter != m.end())
                 {
                     auto cb = iter->second;
+                    cout<<"Find "<<(sum[c]-k)<<" found."<<endl;
                     for (auto i : cb)
                     {
                         cout << "Found for (" << rb << "," << i
-                             << ") to (" << re << "," << c << ")." << endl;
+                             << ") to (" << r << "," << c << ")." << endl;
                     }
+                }
+                else {
+                    cout<<"Find "<<(sum[c]-k)<<" fails."<<endl;
                 }
                 iter = m.find(sum[c]);
                 if (iter == m.end())
@@ -161,7 +165,7 @@ void getSubmatrix3(const vector<vector<int>> &v, int k)
         }
         std::fill(sumCol.begin(), sumCol.end(), 0);
         oper += ct;
-        cout<<"re "<<re<<" ends."<<endl;
+        cout<<"End for rb "<<rb<<"."<<endl;
     }
 }
 
@@ -170,7 +174,7 @@ void fillData(vector<vector<int>> &v, int choice);
 int main()
 {
     vector<vector<int>> v;
-    for (int i = 1; i <= 3; ++i)
+    for (int i = 1; i <= 1; ++i)
     {
         fillData(v, i);
         /*getSubmatrix(v, 12);
