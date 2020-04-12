@@ -106,6 +106,8 @@ int getSubmatrix2(vector<vector<int>> &v, int k)
     return 1;
 }
 
+//Time Complexity for vector dim n x n => n^3
+//Space Complexity for vector dim n x n => n
 void getSubmatrix3(const vector<vector<int>> &v, int k)
 {
     oper = 0;
@@ -180,14 +182,16 @@ void fillData(vector<vector<int>> &v, int choice);
 int main()
 {
     vector<vector<int>> v;
-    for (int i = 1; i <= 3; ++i)
+    //int k = 12;
+    int k = 0;
+    for (int i = 1; i <= 5; ++i)
     {
         fillData(v, i);
-        getSubmatrix(v, 12);
+        getSubmatrix(v, k);
         cout << "Did " << oper << " operations for getSubmatrix choice " << i << endl;
-        getSubmatrix2(v, 12);
+        getSubmatrix2(v, k);
         cout << "Did " << oper << " operations for getSubmatrix2 choice " << i << endl;
-        getSubmatrix3(v, 12);
+        getSubmatrix3(v, k);
         cout << "Did " << oper << " operations for getSubmatrix3 choice " << i << endl;
     }
     return 0;
@@ -217,6 +221,20 @@ void fillData(vector<vector<int>> &v, int choice)
         v.push_back(vector<int>({1, 2, 3, -8}));
         v.push_back(vector<int>({4, 5, 6, -4}));
         break;
+    }    
+    case 4:
+    {
+        v.push_back(vector<int>({9, 7, 16, 15}));
+        v.push_back(vector<int>({1, -6, -7,  3 }));
+        v.push_back(vector<int>({1,  8,  7,  9}));
+        v.push_back(vector<int>({7, -2,  0, 10}));
+        break;
+    }
+    case 5:
+    {
+        v.push_back(vector<int>({1, 2, 3}));
+        v.push_back(vector<int>({-3, -2, -1}));
+        v.push_back(vector<int>({1, 7, 5}));
     }
     default:
     {
