@@ -8,6 +8,7 @@ Find submatrix which has given sum k
 
 using namespace std;
 static int oper = 0;
+bool debug = false;
 
 int getSum(vector<vector<int>> &v, int ib, int jb, int ie, int je)
 {
@@ -118,46 +119,51 @@ void getSubmatrix3(const vector<vector<int>> &v, int k)
     {
         for (int r = rb; r < rt; ++r)
         {
-            cout<<"rb:"<<rb<<" r:"<<r<<endl;
+            if(debug) cout<<"rb:"<<rb<<" r:"<<r<<endl;
             for (int c = 0; c < ct; ++c)
             {
                 sumCol[c] += v[r][c];
                 sum[c] = sumCol[c];
-                cout << sum[c] << " ";
+                if(debug) cout << sum[c] << " ";
                 oper += 2;
             }
-            cout << endl;
+            if(debug) cout << endl;
             if (sum[0] == k)
             {
                 cout << "Found for (" << rb << "," << 0 << ") to ("
                      << r << "," << 0 << ")." << endl;
             }
+            m[sum[0]].push_back(0);
             for (int c = 1; c < ct; ++c)
             {
                 sum[c] += sum[c - 1];
+                if (sum[c] == k)
+                {
+                    cout << "Found for (" << rb << "," << 0 << ") to ("
+                         << r << "," << c << ")." << endl;
+                }
                 auto iter = m.find(sum[c] - k);
                 if (iter != m.end())
                 {
                     auto cb = iter->second;
-                    cout<<"Find "<<(sum[c]-k)<<" found."<<endl;
+                    if(debug) cout<<"Find "<<(sum[c]-k)<<" found."<<endl;
                     for (auto i : cb)
                     {
-                        cout << "Found for (" << rb << "," << i
+                        cout << "Found for (" << rb << "," << i+1
                              << ") to (" << r << "," << c << ")." << endl;
                     }
                 }
                 else {
-                    cout<<"Find "<<(sum[c]-k)<<" fails."<<endl;
+                    if(debug) cout<<"Find "<<(sum[c]-k)<<" fails."<<endl;
                 }
                 iter = m.find(sum[c]);
                 if (iter == m.end())
                 {
-                    vector<int> l(1, sum[c]);
-                    m[sum[c]] = l;
+                    m[sum[c]].push_back(c);
                 }
                 else
                 {
-                    iter->second.push_back(sum[c]);
+                    iter->second.push_back(c);
                 }
                 oper += 4;
             }
@@ -165,7 +171,7 @@ void getSubmatrix3(const vector<vector<int>> &v, int k)
         }
         std::fill(sumCol.begin(), sumCol.end(), 0);
         oper += ct;
-        cout<<"End for rb "<<rb<<"."<<endl;
+        if(debug) cout<<"End for rb "<<rb<<"."<<endl;
     }
 }
 
@@ -174,13 +180,13 @@ void fillData(vector<vector<int>> &v, int choice);
 int main()
 {
     vector<vector<int>> v;
-    for (int i = 1; i <= 1; ++i)
+    for (int i = 1; i <= 3; ++i)
     {
         fillData(v, i);
-        /*getSubmatrix(v, 12);
+        getSubmatrix(v, 12);
         cout << "Did " << oper << " operations for getSubmatrix choice " << i << endl;
         getSubmatrix2(v, 12);
-        cout << "Did " << oper << " operations for getSubmatrix2 choice " << i << endl;*/
+        cout << "Did " << oper << " operations for getSubmatrix2 choice " << i << endl;
         getSubmatrix3(v, 12);
         cout << "Did " << oper << " operations for getSubmatrix3 choice " << i << endl;
     }
